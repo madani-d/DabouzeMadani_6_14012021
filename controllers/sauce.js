@@ -61,5 +61,42 @@ exports.deleteSauce = (req, res, next) => {
             })
         })
         .catch(error => res.status(500).json({ error }));
+};
 
+exports.manageLikes = (req, res, next) => {
+    const userId = req.body.userId;
+    const like = req.body.like;
+    console.log(userId + " " + like);
+    Sauce.findOne({ _id: req.params.id })
+        .then(sauce => {
+            if (like === 1) {
+                if (sauce.usersLiked.indexOf(userId)) {
+                    sauce.usersLiked.push(userId);
+                    sauce.likes = sauce.usersLiked.length;
+                }
+            }
+            if (like === -1) {
+                if (sauce.usersDisliked.indexOf(userId)) {
+                    sauce.usersDisliked.push(userId);
+                    sauce.dislikes = sauce.usersDisliked.length;
+                }
+            }
+            if (like === 0) {
+                if (sauce.usersLiked.indexOf(userId)) {
+                    const deleteUserId = sauce.usersLiked.indexOf(userId);
+                    sauce.usersLiked.splice(deleteUserId, 1);
+                    sauce.likes = sauce.usersLiked.length;
+                }
+                if (sauce.usersDisliked.indexOf(userId)) {
+                    const deleteUserId = sauce.usersDisliked.indexOf(userId);
+                    sauce.usersDisliked.splice(deleteUserId, 1);
+                    sauce.dislikes = sauce.usersDisliked.length;
+                }
+            }
+            console.log(sauce);
+            Sauce.updateOne({ _id: req.params.id }, { usersDisliked: sauce.usersDisliked, usersLiked: sauce.usersLiked, likes: sauce.likes, _id: req.params.id })
+                .then(() => res.status(200).json({ message: 'Like, Dislike ajouté.' }))
+                .catch(error => res.status(400).json({ error }));
+        })
+        .catch(error => console.log(error));
 };
