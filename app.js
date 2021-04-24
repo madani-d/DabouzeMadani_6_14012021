@@ -21,9 +21,10 @@ const limiter = rateLimit({
     max: 100
 });
 
-mongoose.connect(process.env.ACCESS_MONGO_DB,
-    { useNewUrlParser: true,
-    useUnifiedTopology: true })
+mongoose.connect(process.env.ACCESS_MONGO_DB,{
+    useNewUrlParser: true,
+    useUnifiedTopology: true 
+})
     .then(() => console.log('Connexion à MongoDB réussie !'))
     .catch(() => console.log('Connexion à MongoDB échouée !'));
 
