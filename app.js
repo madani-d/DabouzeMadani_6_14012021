@@ -16,7 +16,7 @@ require('dotenv').config();
 
 const app = express();
 
-const limiter = rateLimit({
+const limiter = rateLimit({// Limit max 100 request in 15 minutes
     windowMs: 15 * 60 * 1000,
     max: 100
 });
@@ -37,15 +37,15 @@ app.use((req, res, next) => {
 
 mongoose.set('useCreateIndex', true);
 
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 
-app.use(helmet());
+app.use(helmet());// Secure the App by setting various HTTP headers
 app.use(limiter)
-app.use(xss());
-app.use(hpp());
-app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize({ replaceWith: '_' }));
+app.use(xss());// Filter input to prevent XSS attacks
+app.use(hpp());// Protect against HTTP parameter pollution attack
+app.use(mongoSanitize({ replaceWith: '_' }));// Sanitize the data by replace some '$' and '.' by '_'
 
 
 app.use('/images', express.static(path.join(__dirname, 'images')));

@@ -6,8 +6,8 @@ const { check, validationResult } = require('express-validator');
 
 
 router.post('/signup',
-    [check('email').isEmail(),
-    check('password').isLength({ min: 5 })],
+    [check('email').isEmail(),// Validate if is email pattern
+    check('password').isLength({ min: 5 })],// Validate if passwordlength minimum 5
     (req, res, next) => {
         const errors = validationResult(req)
         if (!errors.isEmpty()) {
