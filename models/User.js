@@ -6,6 +6,6 @@ const userSchema = mongoose.Schema({
     password: { type: String, require: true }
 });
 
-userSchema.plugin(uniqueValidator);
+userSchema.plugin(uniqueValidator);// Verify is email not already in DB
 
 module.exports = mongoose.model('User', userSchema);

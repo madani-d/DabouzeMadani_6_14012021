@@ -7,8 +7,8 @@ exports.createSauce = (req, res, next) => {
     const sauceObjet = JSON.parse(req.body.sauce);
     delete sauceObjet._id;
     const sauce = new Sauce({
-        ...sauceObjet,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        ...sauceObjet,// Add all sauce data
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,// Create url for picture
         likes: 0,
         dislikes: 0
     });
@@ -34,14 +34,14 @@ exports.modifySauce = (req, res, next) => {
     const sauceObjet = req.file ?
     {
         ...JSON.parse(req.body.sauce),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body }
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`// If picture in request add it and body in sauceObjet
+    } : { ...req.body }// Or add just body
 
     if (req.file) {
         Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             const filename = sauce.imageUrl.split('images/')[1];
-            fs.unlink(`images/${filename}`, (error => {if (error) console.log(error)}))
+            fs.unlink(`images/${filename}`, (error => {if (error) console.log(error)}))// If picture in request delete the old picture
         })
         .catch(error => res.status(500).json({ error }));
     }
@@ -55,7 +55,7 @@ exports.deleteSauce = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             const filename = sauce.imageUrl.split('images/')[1];
-            fs.unlink(`images/${filename}`, () => {
+            fs.unlink(`images/${filename}`, () => {// Delete picture
                 Sauce.deleteOne({ _id: req.params.id })
                     .then(sauce => res.status(201).json({ message: 'Sauce supprimé !' }))
                     .catch(error => res.status(400).json({ error }))
@@ -70,7 +70,7 @@ exports.manageLikes = (req, res, next) => {
     Sauce.findOne({ _id: req.params.id })
         .then(sauce => {
             switch (like) {
-                case 1:
+                case 1:// If like = 1 add userId in usersLiked and add +1 to likes
                     if (sauce.usersLiked.indexOf(userId) === -1) {
                         Sauce.updateOne(
                             { _id: req.params.id },
@@ -81,7 +81,7 @@ exports.manageLikes = (req, res, next) => {
                     }
                     break;
 
-                case -1:
+                case -1:// If like = -1 add userId in usersDisliked and add +1 to dislikes
                     if (sauce.usersDisliked.indexOf(userId) === -1) {
                         Sauce.updateOne(
                             { _id: req.params.id },
@@ -92,7 +92,7 @@ exports.manageLikes = (req, res, next) => {
                     }
                     break;
 
-                case 0:
+                case 0:// If like = 0 search userId in usersLiked, usersDislikes and delete userId 
                     if (sauce.usersLiked.indexOf(userId) !== -1) {
                         Sauce.updateOne(
                             { _id: req.params.id },
@@ -102,7 +102,7 @@ exports.manageLikes = (req, res, next) => {
                             .catch(error => res.status(400).json({ error }));
                     }
 
-                    if (sauce.usersDisliked.indexOf(userId) !== -1) {
+                    if (sauce.usersDisliked.indexOf(userId) !== -1) {// Use 'if and if' case error userId present in both usersLiked and usersDisliked
                         Sauce.updateOne(
                             { _id: req.params.id },
                             { $pull: { usersDisliked: userId }, $inc: { dislikes: -1 } }
