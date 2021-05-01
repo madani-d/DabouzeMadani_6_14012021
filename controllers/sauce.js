@@ -115,38 +115,6 @@ exports.manageLikes = (req, res, next) => {
                     error;
                     break;
             }
-
-            // if (like === 1) {
-            //     if (sauce.usersLiked.indexOf(userId) === -1) {
-            //         $push: {}
-            //         sauce.usersLiked.push(userId);
-            //         sauce.likes = sauce.usersLiked.length;
-            //     }
-            // } else if (like === -1) {
-            //     if (sauce.usersDisliked.indexOf(userId) === -1) {
-            //         sauce.usersDisliked.push(userId);
-            //         sauce.dislikes = sauce.usersDisliked.length;
-            //     }
-            // } else if (like === 0) {
-            //     if (sauce.usersLiked.indexOf(userId) !== -1) {
-            //         const deleteUserId = sauce.usersLiked.indexOf(userId);
-            //         sauce.usersLiked.splice(deleteUserId, 1);
-            //         sauce.likes = sauce.usersLiked.length;
-            //     }
-            //     if (sauce.usersDisliked.indexOf(userId) !== -1) {
-            //         const deleteUserId = sauce.usersDisliked.indexOf(userId);
-            //         sauce.usersDisliked.splice(deleteUserId, 1);
-            //         sauce.dislikes = sauce.usersDisliked.length;
-            //     }
-            // }
-            // Sauce.updateOne({ _id: req.params.id }, {
-            //     usersDisliked: sauce.usersDisliked,
-            //     usersLiked: sauce.usersLiked,
-            //     likes: sauce.likes,
-            //     dislikes: sauce.dislikes,
-            //     _id: req.params.id })
-            //     .then(() => res.status(200).json({ message: 'Like, Dislike ajouté.' }))
-            //     .catch(error => res.status(400).json({ error }));
         })
         .catch(error => console.log(error));
 };
